@@ -25,7 +25,10 @@ module EnumFu
         # define a singleton method which get the enum value
         # example: Car.status(:broken)   =>  1
         p1 =  Proc.new { |v| self.const_get(const_name).index(v) }
-        self.class.send(:define_method, name, p1)
+        metaclass = class << self
+          self
+        end
+        metaclass.send(:define_method, name, p1)
 
         # define an instance get/set methods  which get/set  the enum value
         # example: 
@@ -43,12 +46,19 @@ module EnumFu
         }
         define_method name.to_sym, p2
 
-        p3 =  Proc.new { |sym|
+        p3 =  Proc.new { |value|
           # Before patch (Do not allow nil value)
           #write_attribute name.to_s, self.class.const_get(const_name).index(sym.to_sym)
           
           # After patch by Georg Ledermann (Now it's possible to set as null Ex: c.status = nil )
-          write_attribute name.to_s, (sym.blank? ? nil : self.class.const_get(const_name).index(sym.to_sym))
+          if value.blank?
+            casted_value = nil
+          elsif (value.is_a?(String) && value =~ /\A\d+\Z/) || value.is_a?(Integer)
+            casted_value = value.to_i
+          else
+            casted_value = self.class.const_get(const_name).index(value.to_sym)
+          end
+          write_attribute name.to_s, casted_value
         }
         define_method name.to_s+'=', p3
       end

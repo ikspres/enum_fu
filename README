@@ -29,7 +29,7 @@ u.save
 
 # get value
 u.role				# :customer
-u.role_before_type_case		# 0
+u.role_before_type_cast		# 0
 
 # set value
 u.role = :user
@@ -50,3 +50,34 @@ User::ROLE			# [:customer, :admin]
 
 # in a controller
 u = User.new(params[:customer])
+
+
+History 
+=======
+
+Version 0.3 
+-----------
+    2008.09.04 
+    Applied patches from Hongli Lia(www.phusion.nl)
+
+    - Fixed a type in Readme 
+
+    - The singleton enum value getter method (e.g. "Car.status(:broken)   =>  1") is now defined on the metaclass instead of on 'SomeModel.class'. This is because 'SomeModel.class' always returns 'Class', so you actually ended up defining this singleton method on every class in the system.
+
+    - The value assignment method (e.g. "@car.status = ...") can now also accept numbers (e.g. 123) and number strings (e.g. "123"). This allows one to call "Car.new(:car => { :broken => '1' })" (There was a similiar patch also from Georg Ledermann long before.)
+
+    - Unit tests have been added. (Wow! Big applause to Hongli Lai)
+
+Version 0.2 
+-----------
+    2007.12.28 
+    Applied patches from Norman Clarke and Georg Ledermann 
+
+    - accpet nil as input
+	user.role = nil
+
+Version 0.1 
+-----------
+    Someday in 2007 
+    First Release
+
