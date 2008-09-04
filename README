@@ -1,7 +1,4 @@
-EnumFu
-======
-
-Make a integer field of an ActiveRecord as enum typed.
+With enum_fu, you can use integer fields in DB as enum typed in ActiveRecord.
  - faster operation in DB
  - easy coding 
 
@@ -50,6 +47,7 @@ User::ROLE			# [:customer, :admin]
 
 # in a controller
 u = User.new(params[:customer])
+
 
 
 History 
