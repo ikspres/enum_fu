@@ -21,6 +21,19 @@ module EnumFu
         # example: Car::STATUS =>  [:normal, :broken, :running]
         const_name = name.to_s.upcase
         self.const_set const_name, values
+        
+        # define an array contant with the given values humanized, useful for selects and values with spaces
+        # example: Car::STATUS_HUMAN =>  [['Normal',:normal], ['Broken',:broken], ['Running away',:running_away]]
+        const_human_name = name.to_s.upcase+'_HUMAN'
+        human_values = values.map{ |value| [value.to_s.humanize,value]}.to_a
+        self.const_set const_human_name, human_values
+        
+        #define a Hash constant with the humanized values associated with the enum value, useful for filter plugins
+        #Example: Car::STATUS_VALUES =>  {'Normal' => 0, 'Broken' => 1, 'Running away' => 2}
+        const_values_name = name.to_s.upcase+'_VALUES'
+        hash_values = const_get(const_human_name).inject({}){ |state, (key,val)| state.merge(key => self.const_get(const_name).index(val)) }
+        self.const_set const_values_name, hash_values
+        
 
         # define a singleton method which get the enum value
         # example: Car.status(:broken)   =>  1

@@ -61,4 +61,27 @@ class EnumFuTest < Test::Unit::TestCase
     assert_equal 3, Vehicle.vehicle_type(:unknown)
     assert_nil Vehicle.vehicle_type(:invalid)
   end
+  
+  def test_constant_array
+    assert_equal 4, Vehicle::VEHICLE_TYPE.size
+    [:car, :bus, :starship, :unknown].each do |enum|
+      assert Vehicle::VEHICLE_TYPE.include?(enum)
+    end
+  end
+  
+  def test_constant_array_human
+    assert_equal 4, Vehicle::VEHICLE_TYPE_HUMAN.size
+    [:car, :bus, :starship, :unknown].each do |enum|
+      assert Vehicle::VEHICLE_TYPE_HUMAN.include?([enum.to_s.humanize,enum])
+    end
+  end
+  
+  def test_constant_hash_values
+    assert_equal 4, Vehicle::VEHICLE_TYPE_VALUES.size
+    [:car, :bus, :starship, :unknown].each do |enum|
+      enum_human = enum.to_s.humanize
+      assert Vehicle::VEHICLE_TYPE_VALUES.has_key?(enum_human)
+      assert_equal Vehicle::VEHICLE_TYPE_VALUES[enum_human], Vehicle.vehicle_type(enum)
+    end
+  end
 end

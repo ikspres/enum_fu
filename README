@@ -49,6 +49,21 @@ User::ROLE			# [:customer, :admin]
 u = User.new(params[:customer])
 
 
+#list of all enum values with humanized names, useful for selects when enum has a composed name as:
+
+#model
+class User < ActiveRecord::Base
+  acts_as_enum :role, [:customer, :admin, :special_user]
+end
+
+User::ROLE_HUMAN		# [['Customer',:customer], ['Admin',:admin], ['Special user',:special_user]]
+
+
+#hash with all enum values with humanized names associated with the integer value, useful for plugin like filter_table:
+
+User::ROLE_VALUES		# {'Customer' => 0, 'Admin' => 1, 'Special user' => 2}
+
+
 
 History 
 =======
